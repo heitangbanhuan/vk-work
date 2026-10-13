@@ -1,0 +1,192 @@
+{
+  "baseline": {
+    "w_std": 16.428053438296146,
+    "b_std": 63.3051,
+    "w_raw": 6.115401935271387,
+    "b_raw": 33.305384266332695,
+    "test_metrics": {
+      "mse": 20.174059288348555,
+      "rmse": 4.491554217456198,
+      "mae": 3.8695305409308025,
+      "r2": 0.9327547082491052
+    }
+  },
+  "loss_curve_final_train_mse": 24.978639218486105,
+  "learning_rate_final_loss": {
+    "0.001": 1945.4068103635293,
+    "0.01": 26.301797593833996,
+    "0.05": 24.97863921848612,
+    "0.1": 24.978639218486105,
+    "0.3": 24.97863921848612,
+    "0.5": 24.978639218486123,
+    "0.9": 24.978639218486123,
+    "1.2": 1.2089151619522996e+62
+  },
+  "best_learning_rate": 0.1,
+  "best_learning_rate_final_mse": 24.978639218486105,
+  "standardization_compare": {
+    "0.001": {
+      "raw_scale_final_mse": 216.81867925159216,
+      "standardized_final_mse": 1945.4068103635293
+    },
+    "0.01": {
+      "raw_scale_final_mse": 62.75893321930566,
+      "standardized_final_mse": 26.301797593833996
+    },
+    "0.05": {
+      "raw_scale_final_mse": 1.0462727168108881e+141,
+      "standardized_final_mse": 24.97863921848612
+    },
+    "0.1": {
+      "raw_scale_final_mse": 8.434465410699254e+296,
+      "standardized_final_mse": 24.978639218486105
+    },
+    "0.3": {
+      "raw_scale_final_mse": "inf",
+      "standardized_final_mse": 24.97863921848612
+    },
+    "0.5": {
+      "raw_scale_final_mse": "inf",
+      "standardized_final_mse": 24.978639218486123
+    },
+    "0.9": {
+      "raw_scale_final_mse": "nan",
+      "standardized_final_mse": 24.978639218486123
+    },
+    "1.2": {
+      "raw_scale_final_mse": "nan",
+      "standardized_final_mse": 1.2089151619522996e+62
+    }
+  },
+  "standardization_note": "原始尺度在 lr>=0.05 时很快发散；标准化后同样的 lr 可以稳定收敛",
+  "batch_size": {
+    "BGD (batch=100, lr=0.05)": {
+      "final_train_mse": 24.99245204909224,
+      "num_updates": 60
+    },
+    "Mini-batch (batch=16, lr=0.05)": {
+      "final_train_mse": 25.01290151570964,
+      "num_updates": 420
+    },
+    "SGD (batch=1, lr=0.05)": {
+      "final_train_mse": 26.23277858227319,
+      "num_updates": 6000
+    },
+    "SGD (batch=1, lr=0.01)": {
+      "final_train_mse": 25.100996686868562,
+      "num_updates": 6000
+    }
+  },
+  "loss_function_slopes_with_outliers": {
+    "mse": {
+      "w": 6.371975166228076,
+      "b": 33.958189347713414,
+      "slope_error_pct": 4.195525227489446
+    },
+    "mae": {
+      "w": 6.202811444363272,
+      "b": 32.26523817853162,
+      "slope_error_pct": 1.4293338363867678
+    },
+    "huber": {
+      "w": 6.201666621351106,
+      "b": 32.47882810459623,
+      "slope_error_pct": 1.4106135131065745
+    }
+  },
+  "outlier_setup": {
+    "indices": [
+      3,
+      12,
+      25,
+      40
+    ],
+    "shift": 45.0
+  },
+  "momentum_decay": {
+    "target_loss": 25.478212002855837,
+    "table": {
+      "温和 lr=0.1": {
+        "基线 (纯 BGD)": {
+          "final_train_mse": 24.978639218486116,
+          "reach_epoch": 21
+        },
+        "+ 动量 0.9": {
+          "final_train_mse": 24.978742573427905,
+          "reach_epoch": 37
+        },
+        "+ 学习率衰减 0.99": {
+          "final_train_mse": 24.97863921850157,
+          "reach_epoch": 23
+        },
+        "+ 动量 + 衰减": {
+          "final_train_mse": 24.979058824834432,
+          "reach_epoch": 42
+        }
+      },
+      "临界 lr=1.0": {
+        "基线 (纯 BGD)": {
+          "final_train_mse": 4302.395265000121,
+          "reach_epoch": null
+        },
+        "+ 动量 0.9": {
+          "final_train_mse": 24.979232541116534,
+          "reach_epoch": 10
+        },
+        "+ 学习率衰减 0.99": {
+          "final_train_mse": 24.978639218486123,
+          "reach_epoch": 21
+        },
+        "+ 动量 + 衰减": {
+          "final_train_mse": 24.978747072066916,
+          "reach_epoch": 33
+        }
+      },
+      "衰减 lr=0.5": {
+        "基线 (纯 BGD)": {
+          "final_train_mse": 24.978639218486123,
+          "reach_epoch": 1
+        },
+        "+ 动量 0.9": {
+          "final_train_mse": 24.978741909573934,
+          "reach_epoch": 34
+        },
+        "+ 学习率衰减 0.99": {
+          "final_train_mse": 24.978639218486123,
+          "reach_epoch": 1
+        },
+        "+ 动量 + 衰减": {
+          "final_train_mse": 24.978651818899042,
+          "reach_epoch": 5
+        }
+      }
+    }
+  },
+  "final_model": {
+    "config": {
+      "learning_rate": 0.05,
+      "epochs": 300,
+      "batch_size": 16,
+      "loss_name": "mse",
+      "momentum": 0.9,
+      "lr_decay": 0.998,
+      "seed": 42
+    },
+    "w_raw": 6.236287836960412,
+    "b_raw": 33.04676550109328,
+    "w_std": 16.75279416243888,
+    "b_std": 63.63949911408628,
+    "metrics_train": {
+      "mse": 25.195918523904542,
+      "rmse": 5.019553617992793,
+      "mae": 3.9915787393592814,
+      "r2": 0.9145494319356705
+    },
+    "metrics_test": {
+      "mse": 20.575401757392584,
+      "rmse": 4.536011657545931,
+      "mae": 3.8964013863188387,
+      "r2": 0.9314169313031201
+    }
+  }
+}

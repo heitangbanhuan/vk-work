@@ -1,0 +1,32 @@
+# requirements.txt
+# 这个项目需要的东西都写在这里，装完之后就能跑。
+
+# 安装方法（在项目文件夹下执行）：
+#   pip install -r requirements.txt
+
+# 然后是运行顺序（一定要在 code 文件夹里运行，因为代码里的路径是相对的）：
+#   cd code
+#   python train.py        # 训练，会生成 results/figure.png 和 results/result.json
+#   python make_report.py  # 生成 report.pdf
+
+# ---------------- 需要的库 ----------------
+
+# numpy 用来做矩阵和向量计算
+numpy>=1.26
+
+# matplotlib 用来画图
+matplotlib>=3.8
+
+# reportlab 用来生成 pdf 报告
+reportlab>=4.0
+
+# ---------------- 我用的是这些版本 ----------------
+# Python     3.14.7
+# numpy      2.5.2
+# matplotlib 3.11.1
+# reportlab  5.0.1
+
+# ---------------- 说明 ----------------
+# 没有用 pandas，因为数据只有两列、两百来行，用 Python 自带的 csv 模块就够了。
+# 没有用 sklearn，因为任务要求自己从零实现线性回归和梯度下降。
+# Pillow 不用单独装，装了 matplotlib 就自动有了。

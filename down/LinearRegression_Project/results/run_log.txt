@@ -1,0 +1,169 @@
+========================================================================
+从零实现线性回归 + 梯度下降（NumPy 版）
+训练集: data/train.csv   测试集: data/test.csv
+========================================================================
+Python 版本: 3.14.7
+NumPy 版本: 2.5.2
+
+[数据] 正在读取并预处理数据...
+  训练集: 100 个样本   测试集: 30 个样本
+  特征 hours 的范围: [1.05, 9.93]
+  标准化参数: mean = 4.9056, std = 2.6863
+
+[实验 0] 基线：闭式解（正规方程）—— 给梯度下降当参照物
+  标准化空间: w = 16.428053, b = 63.305100
+  原始空间:   score = 6.1154 * hours + 33.3054
+  闭式解在测试集上: MSE=20.1741 RMSE=4.4916 MAE=3.8695 R2=0.9328
+
+[实验 A] Loss 下降曲线 + 拟合直线随迭代的演化
+  训练完成: score = 6.1154 * hours + 33.3054
+  最终训练 MSE = 24.9786
+  [图片] 已保存: results\01_loss_curve.png
+  [图片] 已保存: results\02_fit_progress.png
+
+[实验 B] 不同学习率的收敛情况对比
+  --- 学习率 lr = 0.001 ---
+      最终 train MSE = 1945.4068
+  --- 学习率 lr = 0.01 ---
+      最终 train MSE = 26.3018
+  --- 学习率 lr = 0.05 ---
+      最终 train MSE = 24.9786
+  --- 学习率 lr = 0.1 ---
+      最终 train MSE = 24.9786
+  --- 学习率 lr = 0.3 ---
+      最终 train MSE = 24.9786
+  --- 学习率 lr = 0.5 ---
+      最终 train MSE = 24.9786
+  --- 学习率 lr = 0.9 ---
+      最终 train MSE = 24.9786
+  --- 学习率 lr = 1.2 ---
+      最终 train MSE = 120891516195229960524624386063603025089612661190527971336650752.0000
+  [图片] 已保存: results\03_learning_rate.png
+  [图片] 已保存: results\04_lr_vs_final_loss.png
+
+  结论：表现最好的学习率是 lr = 0.1 （最终 train MSE = 24.9786）
+
+[实验 C] 特征标准化 vs 原始尺度（都跑一遍同样的学习率）
+  原始尺度 lr=0.001  → 最终 train MSE = 216.8187
+  原始尺度 lr=0.01   → 最终 train MSE = 62.7589
+  原始尺度 lr=0.05   → 最终 train MSE = 1046272716810888115421899840774571426842162621062171116827508643891800771565405974825573446327696074476659037854279807094400360267181843283968.0000
+  原始尺度 lr=0.1    → 最终 train MSE = 843446541069925366720362728780541029624782626442578521482760110824618630023896422811200371761009124294431566912200116349983096361998013474061522221236822437261737944337454211182168981161236449975740623871112361706973963881309613721519494683395794989853344827829917857260040212176182856830433624064.0000
+  原始尺度 lr=0.3    → 最终 train MSE = inf
+  原始尺度 lr=0.5    → 最终 train MSE = inf
+  原始尺度 lr=0.9    → 最终 train MSE = nan
+  原始尺度 lr=1.2    → 最终 train MSE = nan
+  [图片] 已保存: results\05_standardization.png
+
+[实验 D] 批量大小对比：BGD / Mini-batch / SGD
+  --- BGD (batch=100, lr=0.05) (batch_size=None, lr=0.05) ---
+      最终 train MSE = 24.9925（共 60 次参数更新）
+  --- Mini-batch (batch=16, lr=0.05) (batch_size=16, lr=0.05) ---
+      最终 train MSE = 25.0129（共 420 次参数更新）
+  --- SGD (batch=1, lr=0.05) (batch_size=1, lr=0.05) ---
+      最终 train MSE = 26.2328（共 6000 次参数更新）
+  --- SGD (batch=1, lr=0.01) (batch_size=1, lr=0.01) ---
+      最终 train MSE = 25.1010（共 6000 次参数更新）
+  [图片] 已保存: results\06_batch_size.png
+
+[实验 E] 损失函数对比：MSE / MAE / Huber 抗异常值能力
+  已在训练集中注入 4 个异常点（成绩 +45 分），位置: [3, 12, 25, 40]
+  --- 损失函数: mse ---
+      学到: score = 6.3720 * hours + 33.9582  |  斜率偏离正确值 4.20%
+  --- 损失函数: mae ---
+      学到: score = 6.2028 * hours + 32.2652  |  斜率偏离正确值 1.43%
+  --- 损失函数: huber ---
+      学到: score = 6.2017 * hours + 32.4788  |  斜率偏离正确值 1.41%
+  [图片] 已保存: results\07_loss_functions.png
+
+[实验 F] 动量与学习率衰减的消融实验
+  --- 温和 lr=0.1, 基线 (纯 BGD) ---
+      最终 train MSE = 24.9786
+  --- 温和 lr=0.1, + 动量 0.9 ---
+      最终 train MSE = 24.9787
+  --- 温和 lr=0.1, + 学习率衰减 0.99 ---
+      最终 train MSE = 24.9786
+  --- 温和 lr=0.1, + 动量 + 衰减 ---
+      最终 train MSE = 24.9791
+  --- 临界 lr=1.0, 基线 (纯 BGD) ---
+      最终 train MSE = 4302.3953
+  --- 临界 lr=1.0, + 动量 0.9 ---
+      最终 train MSE = 24.9792
+  --- 临界 lr=1.0, + 学习率衰减 0.99 ---
+      最终 train MSE = 24.9786
+  --- 临界 lr=1.0, + 动量 + 衰减 ---
+      最终 train MSE = 24.9787
+  --- 衰减 lr=0.5, 基线 (纯 BGD) ---
+      最终 train MSE = 24.9786
+  --- 衰减 lr=0.5, + 动量 0.9 ---
+      最终 train MSE = 24.9787
+  --- 衰减 lr=0.5, + 学习率衰减 0.99 ---
+      最终 train MSE = 24.9786
+  --- 衰减 lr=0.5, + 动量 + 衰减 ---
+      最终 train MSE = 24.9787
+  目标线 = 最优 loss × 1.02 = 25.48，各配置第几轮能达标？
+      【温和 lr=0.1】
+          基线 (纯 BGD)           → 第 21 轮达标
+          + 动量 0.9             → 第 37 轮达标
+          + 学习率衰减 0.99         → 第 23 轮达标
+          + 动量 + 衰减            → 第 42 轮达标
+      【临界 lr=1.0】
+          基线 (纯 BGD)           → 始终未达标（不收敛）
+          + 动量 0.9             → 第 10 轮达标
+          + 学习率衰减 0.99         → 第 21 轮达标
+          + 动量 + 衰减            → 第 33 轮达标
+      【衰减 lr=0.5】
+          基线 (纯 BGD)           → 第 1 轮达标
+          + 动量 0.9             → 第 34 轮达标
+          + 学习率衰减 0.99         → 第 1 轮达标
+          + 动量 + 衰减            → 第 5 轮达标
+  [图片] 已保存: results\08_momentum_decay.png
+
+[实验 G] 最终模型：在测试集上评估拟合效果
+  最终配置: {'learning_rate': 0.05, 'epochs': 300, 'batch_size': 16, 'loss_name': 'mse', 'momentum': 0.9, 'lr_decay': 0.998, 'seed': 42}
+    epoch    1 | lr = 0.05000 | train MSE =  2605.4691 | test MSE =  3344.3063
+    epoch   10 | lr = 0.04911 | train MSE =    26.8873 | test MSE =    23.5370
+    epoch   20 | lr = 0.04813 | train MSE =    25.0033 | test MSE =    20.2885
+    epoch   30 | lr = 0.04718 | train MSE =    25.0753 | test MSE =    20.1057
+    epoch   40 | lr = 0.04624 | train MSE =    25.0290 | test MSE =    19.9908
+    epoch   50 | lr = 0.04533 | train MSE =    25.1501 | test MSE =    19.9485
+    epoch   60 | lr = 0.04443 | train MSE =    25.0275 | test MSE =    20.5124
+    epoch   70 | lr = 0.04355 | train MSE =    25.0072 | test MSE =    20.2380
+    epoch   80 | lr = 0.04269 | train MSE =    25.1026 | test MSE =    20.6408
+    epoch   90 | lr = 0.04184 | train MSE =    25.0261 | test MSE =    20.4293
+    epoch  100 | lr = 0.04101 | train MSE =    25.0390 | test MSE =    20.0036
+    epoch  110 | lr = 0.04020 | train MSE =    24.9815 | test MSE =    20.1663
+    epoch  120 | lr = 0.03940 | train MSE =    25.0270 | test MSE =    20.0582
+    epoch  130 | lr = 0.03862 | train MSE =    25.1600 | test MSE =    20.3727
+    epoch  140 | lr = 0.03785 | train MSE =    24.9990 | test MSE =    20.3597
+    epoch  150 | lr = 0.03710 | train MSE =    24.9807 | test MSE =    20.1518
+    epoch  160 | lr = 0.03637 | train MSE =    25.0645 | test MSE =    20.6391
+    epoch  170 | lr = 0.03565 | train MSE =    25.0080 | test MSE =    20.4059
+    epoch  180 | lr = 0.03494 | train MSE =    24.9966 | test MSE =    20.1865
+    epoch  190 | lr = 0.03425 | train MSE =    25.1196 | test MSE =    20.8064
+    epoch  200 | lr = 0.03357 | train MSE =    24.9974 | test MSE =    20.3071
+    epoch  210 | lr = 0.03290 | train MSE =    25.0326 | test MSE =    20.2714
+    epoch  220 | lr = 0.03225 | train MSE =    24.9859 | test MSE =    20.1684
+    epoch  230 | lr = 0.03161 | train MSE =    25.0098 | test MSE =    20.3774
+    epoch  240 | lr = 0.03099 | train MSE =    25.0599 | test MSE =    20.5284
+    epoch  250 | lr = 0.03037 | train MSE =    25.1858 | test MSE =    20.4720
+    epoch  260 | lr = 0.02977 | train MSE =    24.9924 | test MSE =    20.0541
+    epoch  270 | lr = 0.02918 | train MSE =    25.0521 | test MSE =    20.5178
+    epoch  280 | lr = 0.02860 | train MSE =    24.9970 | test MSE =    20.1955
+    epoch  290 | lr = 0.02803 | train MSE =    24.9798 | test MSE =    20.1693
+    epoch  300 | lr = 0.02748 | train MSE =    25.1959 | test MSE =    20.5754
+  最终模型: score = 6.2363 * hours + 33.0468
+  训练集: MSE=25.1959 RMSE=5.0196 MAE=3.9916 R2=0.9145
+  测试集: MSE=20.5754 RMSE=4.5360 MAE=3.8964 R2=0.9314
+  [图片] 已保存: results\09_test_fit.png
+  [图片] 已保存: results\10_residuals.png
+  [数据] 已保存: results\test_predictions.csv
+
+[汇总] 所有关键指标已保存: results\results.json
+  [数据] 已保存: results\final_training_curve.csv
+
+========================================================================
+全部实验完成！最终模型：
+    score = 6.2363 * hours + 33.0468
+    测试集 R² = 0.9314, RMSE = 4.5360, MAE = 3.8964
+所有结果已保存到: results
+========================================================================
